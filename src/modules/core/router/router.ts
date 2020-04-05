@@ -1,5 +1,6 @@
-import { Singleton } from "./singleton";
-import { ComponentConstructor } from "./component";
+import { Singleton } from "../singleton";
+import { ComponentConstructor } from "../component";
+import { RouterElement } from "./router-element";
 
 interface RouteParams {
   [key: string]: string;
@@ -13,25 +14,22 @@ type LazyComponent = <T extends ComponentConstructor>(
   data: RouteData
 ) => Promise<{ default: T }>;
 
-interface RouteConfig {
+export interface RouteConfig {
   path: string;
   component: LazyComponent | ComponentConstructor;
 }
 
 export class Router extends Singleton {
-  public static readonly outletNodeName: string = "router-outlet";
-  public static readonly outletKeyAttrName: string = "key";
   public baseHref: string;
   public activeRoute: RouteConfig | null;
 
-  protected routes: RouteConfig[];
+  protected config: RouteConfig[];
 
   protected singletonInit() {
     this.activeRoute = null;
     this.baseHref = "/";
-    window.addEventListener("click", (e) => this.onWindowClick(e));
+    window.addEventListener("click", (e) => this.mouseClicked(e));
     window.addEventListener("popstate", (e) => {
-      console.log(e);
       this.navigate(location.pathname, "", true);
     });
   }
@@ -41,28 +39,34 @@ export class Router extends Singleton {
    */
   public navigate(href: string, key?: string, doNotPushState?: boolean): void {
     const routeConfig = this.findRouteConfig(href);
+    const outlet = this.getOutlet(key);
 
-    if (routeConfig === this.activeRoute) {
+    if (routeConfig === this.activeRoute || !outlet) {
       return;
     }
 
     this.activeRoute = routeConfig;
 
-    if (routeConfig) {
-      this.loadComponent(this.getOutlet(key), routeConfig).then(() => {
-        if (!doNotPushState) {
-          window.history.pushState(null, null, this.getHref(href));
-        }
-      });
-    } else {
-      this.getOutlet(key).innerHTML = "";
+    if (!routeConfig) {
+      outlet.clear();
       if (!doNotPushState) {
-        window.history.pushState(null, null, this.getHref(href));
+        window.history.pushState(null, "", this.getHref(href));
       }
+
+      return;
     }
+
+    this.loadComponent(outlet, routeConfig).then(() => {
+      if (!doNotPushState) {
+        window.history.pushState(null, "", this.getHref(href));
+      }
+    });
   }
 
-  public loadComponent(outlet: HTMLElement, config: RouteConfig): Promise<any> {
+  public loadComponent(
+    outlet: RouterElement,
+    config: RouteConfig
+  ): Promise<any> {
     if (config.component instanceof Function) {
       return (config.component as LazyComponent)({
         params: {
@@ -79,48 +83,69 @@ export class Router extends Singleton {
   }
 
   public setRoutes(routes: RouteConfig[]): void {
-    this.routes = routes;
+    this.config = routes;
   }
 
   protected renderComponentTo(
-    container: HTMLElement,
+    outlet: RouterElement,
     Element: ComponentConstructor
   ): void {
-    container.innerHTML = "";
-    container.appendChild(document.createElement(Element.tag));
+    outlet.attachComponent(Element);
   }
 
   protected findRouteConfig(path: string): RouteConfig | null {
-    let match: RouteConfig | null = null;
     const requestedUrl = this.getUrlParts(path);
 
-    for (
-      let requestedIndex = 0;
-      requestedIndex < requestedUrl.parts.length;
-      requestedIndex++
-    ) {
-      for (let x = 0; x < this.routes.length; x++) {
-        match = this.routes[x];
-        const url = this.getUrlParts(match.path);
+    // Iterate over router config
+    for (let configIndex = 0; configIndex < this.config.length; configIndex++) {
+      let intermediateResult: RouteConfig | null = null;
+      const configPath = this.getUrlParts(this.config[configIndex].path);
 
-        if (url.parts[requestedIndex][0] === ":") {
+      // Iterate for each config over url parts
+      for (
+        let requestedIndex = 0;
+        requestedIndex < requestedUrl.parts.length;
+        requestedIndex++
+      ) {
+        if (configPath.parts[requestedIndex] === undefined) {
+          intermediateResult = null;
+          break;
+        }
+        // Param can be only the last item and it equels any non-empty value
+        if (configPath.parts[requestedIndex][0] === ":") {
+          if (!requestedUrl.parts[requestedIndex]) {
+            intermediateResult = null;
+          }
           break;
         }
 
-        if (requestedUrl.parts[requestedIndex] !== url.parts[requestedIndex]) {
-          match = null;
+        if (
+          requestedUrl.parts[requestedIndex] ===
+          configPath.parts[requestedIndex]
+        ) {
+          intermediateResult = this.config[configIndex];
           break;
+        } else {
+          intermediateResult = null;
         }
+      }
+
+      if (intermediateResult) {
+        return intermediateResult;
       }
     }
 
-    return match;
+    return null;
   }
 
   protected getUrlParts(path: string) {
     let [pathname, _search] = path.split("?");
     let [search, hash] = (_search || "").split("#");
     let parts = pathname.split("/").filter((x) => x);
+
+    if (parts.length === 0) {
+      parts.push("");
+    }
 
     return {
       pathname,
@@ -136,15 +161,15 @@ export class Router extends Singleton {
       .join("/");
   }
 
-  protected getOutlet(key?: string): HTMLElement {
+  protected getOutlet(key?: string): RouterElement | null {
     return document.querySelector(
       key
-        ? `${Router.outletNodeName}[${Router.outletKeyAttrName}=${key}]`
-        : Router.outletNodeName
+        ? `${RouterElement.tag}[${RouterElement.attrIdName}=${key}]`
+        : RouterElement.tag
     );
   }
 
-  protected onWindowClick(e: MouseEvent) {
+  public mouseClicked(e: MouseEvent) {
     if (!(e.target instanceof HTMLAnchorElement) || !e.target.href) {
       return;
     }
