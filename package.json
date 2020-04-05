@@ -1,0 +1,32 @@
+{
+  "name": "krepkiy-cloud",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "rm -rf build/app && mkdir -p build/app && cp src/static/* build/app",
+    "predev": "rm -rf build/app && mkdir -p build/app && cp src/static/* build/app",
+    "dev": "webpack-dev-server --host 0.0.0.0",
+    "build": "webpack -p"
+  },
+  "author": "Valentin Krepkiy <valkrepkiy@gmail.com> (http://krepkiy.cloud/)",
+  "license": "ISC",
+  "peerDependencies": {
+    "loglevel": "^1.6.7"
+  },
+  "devDependencies": {
+    "css-loader": "^3.4.2",
+    "style-loader": "^1.1.3",
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.8.3",
+    "webpack": "^5.0.0-beta.14",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "dependencies": {
+    "@types/node": "^12.12.34"
+  }
+}

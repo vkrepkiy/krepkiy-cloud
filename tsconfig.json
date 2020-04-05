@@ -1,0 +1,16 @@
+{
+  "include": ["src/"],
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "baseUrl": "src",
+    "sourceMap": true,
+    "module": "ES2020",
+    "target": "ES2015",
+    "outDir": "build/tsc-out",
+    "declaration": true,
+    "allowJs": true,
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "incremental": true
+  }
+}
