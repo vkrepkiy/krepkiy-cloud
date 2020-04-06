@@ -1,6 +1,6 @@
 import { Singleton } from "../singleton";
 import { ComponentConstructor } from "../component";
-import { RouterElement } from "./router-element";
+import { RouterOutletElement } from "./router-element";
 
 interface RouteParams {
   [key: string]: string;
@@ -25,10 +25,13 @@ export class Router extends Singleton {
 
   protected config: RouteConfig[];
 
+  protected outlets: { [key: string]: RouterOutletElement };
+
   protected singletonInit() {
     this.activeRoute = null;
+    this.outlets = {};
     this.baseHref = "/";
-    window.addEventListener("click", (e) => this.mouseClicked(e));
+
     window.addEventListener("popstate", (e) => {
       this.navigate(location.pathname, "", true);
     });
@@ -38,6 +41,7 @@ export class Router extends Singleton {
    * Should load correct component to outlet and update history
    */
   public navigate(href: string, key?: string, doNotPushState?: boolean): void {
+    key = key || RouterOutletElement.defaultOutletKey;
     const routeConfig = this.findRouteConfig(href);
     const outlet = this.getOutlet(key);
 
@@ -56,38 +60,46 @@ export class Router extends Singleton {
       return;
     }
 
-    this.loadComponent(outlet, routeConfig).then(() => {
+    this.loadComponent(routeConfig).then((Component) => {
       if (!doNotPushState) {
         window.history.pushState(null, "", this.getHref(href));
       }
+
+      this.renderComponentToOutlet(outlet, Component);
     });
   }
 
-  public loadComponent(
-    outlet: RouterElement,
-    config: RouteConfig
-  ): Promise<any> {
+  /**
+   * Load component from RouteConfig
+   */
+  public loadComponent(config: RouteConfig): Promise<ComponentConstructor> {
     if (config.component instanceof Function) {
       return (config.component as LazyComponent)({
         params: {
+          // TODO: it's hardcoded!!!
           name: "blog",
         },
       }).then((module) => {
-        this.renderComponentTo(outlet, module.default);
-        return Promise.resolve();
+        return Promise.resolve(module.default);
       });
     }
-
-    this.renderComponentTo(outlet, config.component as ComponentConstructor);
-    return Promise.resolve();
+    return Promise.resolve(config.component);
   }
 
   public setRoutes(routes: RouteConfig[]): void {
     this.config = routes;
   }
 
-  protected renderComponentTo(
-    outlet: RouterElement,
+  public bindOutlet(key: string, outlet: RouterOutletElement): void {
+    if (outlet) {
+      this.outlets[key] = outlet;
+    } else {
+      delete this.outlets[key];
+    }
+  }
+
+  protected renderComponentToOutlet(
+    outlet: RouterOutletElement,
     Element: ComponentConstructor
   ): void {
     outlet.attachComponent(Element);
@@ -161,15 +173,13 @@ export class Router extends Singleton {
       .join("/");
   }
 
-  protected getOutlet(key?: string): RouterElement | null {
-    return document.querySelector(
-      key
-        ? `${RouterElement.tag}[${RouterElement.attrIdName}=${key}]`
-        : RouterElement.tag
-    );
+  protected getOutlet(
+    key: string = RouterOutletElement.defaultOutletKey
+  ): RouterOutletElement | null {
+    return this.outlets[key] || null;
   }
 
-  public mouseClicked(e: MouseEvent) {
+  public handleMouseEvent(e: MouseEvent) {
     if (!(e.target instanceof HTMLAnchorElement) || !e.target.href) {
       return;
     }

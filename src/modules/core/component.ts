@@ -1,8 +1,10 @@
+import { Router } from "./router/router";
+
 interface ComponentOptions {
   tag: string;
   template?: string;
   style?: string;
-  noEncapsulation?: boolean;
+  dependencies?: CustomElementConstructor[];
 }
 
 /**
@@ -13,6 +15,11 @@ export interface ComponentInterface extends HTMLElement {
    * Called when component is connected
    */
   componentConnected?();
+
+  /**
+   * Called before execution of connectedCallback()
+   */
+  componentBeforeConnected?();
   /**
    * Called when component is disconnected
    */
@@ -81,14 +88,17 @@ function getDecoratedClass(
         return;
       }
 
-      if (options.noEncapsulation) {
-        this.innerHTML = "";
-        this.appendChild(ClassComponent.template);
-      } else {
-        this.attachShadow({ mode: "open" }).appendChild(
-          ClassComponent.template
-        );
+      if (this.componentBeforeConnected) {
+        this.componentBeforeConnected();
       }
+
+      this.innerHTML = "";
+
+      this.attachShadow({ mode: "open" }).appendChild(ClassComponent.template);
+
+      this.shadowRoot!.addEventListener("click", (e: MouseEvent) => {
+        new Router().handleMouseEvent(e);
+      });
 
       if (this.componentConnected) {
         this.componentConnected();

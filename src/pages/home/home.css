@@ -4,10 +4,14 @@
   height: 100%;
   overflow: hidden;
   position: relative;
-  display: flex;
+  /* display: flex;
+  flex-direction: column; */
   background: #212121;
   color: #999;
   font-family: monospace;
+}
+.wrap {
+  top: 50vh;
 }
 .loading-title {
   display: block;

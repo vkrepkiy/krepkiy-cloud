@@ -5,21 +5,18 @@
 import { Component, ComponentInterface } from "./modules/core/component";
 import { Router } from "./modules/core/router/router";
 import { routerConfig } from "./routes";
+import MainMenuElement from "./modules/main-menu/main-menu";
 
 @Component({
-  tag: "vk-app",
+  tag: "vk-main",
   /**
    * Html and css inlined, and it's okay here because this data is required to bootstrap app
    */
   template: require("./main.html"),
   style: require("./main.css"),
-  /**
-   * Our simple router won't work with shadow dom, so no encapsulation is used
-   */
-  noEncapsulation: true,
+  dependencies: [MainMenuElement],
 })
-export class ApplicationElement extends HTMLElement
-  implements ComponentInterface {
+export class MainElement extends HTMLElement implements ComponentInterface {
   protected router: Router = new Router();
 
   constructor() {
