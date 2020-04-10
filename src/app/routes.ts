@@ -20,7 +20,7 @@ export const routerConfig: RouteConfig[] = [
     path: "pages/:name",
     component: function (route) {
       return import(
-        /* webpackMode: "lazy-once" */
+        /* webpackMode: "lazy" */
         /* webpackInclude: /\.ts/ */
         `./pages/${route.params.name}/${route.params.name}`
       );

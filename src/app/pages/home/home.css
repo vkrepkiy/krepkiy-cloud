@@ -4,8 +4,8 @@
   height: 100%;
   overflow: hidden;
   position: relative;
-  /* display: flex;
-  flex-direction: column; */
+  display: flex;
+  flex-direction: column;
   background: #212121;
   color: #999;
   font-family: monospace;

@@ -17,6 +17,7 @@ export class RouterOutletElement extends HTMLElement
   public static attrIdName: string = attrIdName;
   public static defaultOutletKey: string = "default";
   public router = new Router();
+  public activatedElement: Node | null;
 
   #initialContent: string;
 
@@ -38,11 +39,14 @@ export class RouterOutletElement extends HTMLElement
   }
 
   public attachComponent(Component: ComponentConstructor): void {
-    this.shadowRoot!.innerHTML = "";
-    this.shadowRoot!.appendChild(Component.template);
+    this.clear();
+    this.activatedElement = document.createElement(Component.tag);
+    this.parentNode!.insertBefore(this.activatedElement, this);
   }
 
   public clear(): void {
-    this.shadowRoot!.innerHTML = "";
+    if (this.activatedElement) {
+      this.parentNode!.removeChild(this.activatedElement);
+    }
   }
 }

@@ -4,7 +4,7 @@ interface ComponentOptions {
   tag: string;
   template?: string;
   style?: string;
-  dependencies?: CustomElementConstructor[];
+  elements?: CustomElementConstructor[];
 }
 
 /**
@@ -97,7 +97,7 @@ function getDecoratedClass(
       this.attachShadow({ mode: "open" }).appendChild(ClassComponent.template);
 
       this.shadowRoot!.addEventListener("click", (e: MouseEvent) => {
-        new Router().handleMouseEvent(e);
+        new Router().handleLinkClickEvent(e);
       });
 
       if (this.componentConnected) {

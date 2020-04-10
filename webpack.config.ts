@@ -1,36 +1,46 @@
 const path = require("path");
+const CopyPlugin = require("copy-webpack-plugin");
 
 function fromRoot(str) {
   return path.resolve(__dirname, str);
 }
 
+const outDir = "build/app";
+
 module.exports = {
   entry: {
-    main: fromRoot("src/main.ts"),
+    app: fromRoot("src/app/app.ts"),
   },
   resolve: {
     extensions: [".json", ".js", ".ts"],
   },
   output: {
     filename: "[name].bundle.js",
-    path: fromRoot("build/app"),
+    path: fromRoot(outDir),
   },
   experiments: {
     asset: true,
   },
   devtool: "source-map",
   devServer: {
-    contentBase: fromRoot("build/app"),
-    hot: true,
+    historyApiFallback: {
+      index: "index.html",
+    },
+    compress: true,
+    contentBase: fromRoot(outDir),
     writeToDisk: true,
   },
+  plugins: [
+    new CopyPlugin([{ from: fromRoot("src/static"), to: fromRoot(outDir) }]),
+  ],
   module: {
     rules: [
       {
-        test: /\.(html|css)/,
+        test: /\.(html|css)$/,
+        include: fromRoot("src/app"),
         type: "asset/source",
         generator: {
-          filename: "static/[hash][ext]",
+          filename: "[hash][ext]",
         },
       },
       {
@@ -42,12 +52,7 @@ module.exports = {
         type: "asset/resource",
       },
       {
-        include: fromRoot("src/css"),
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"],
-      },
-      {
-        test: /\.tsx?$/,
+        test: /\.ts$/,
         include: fromRoot("src"),
         use: [
           {

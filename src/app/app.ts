@@ -8,16 +8,18 @@ import { routerConfig } from "./routes";
 import MainMenuElement from "./modules/main-menu/main-menu";
 
 @Component({
-  tag: "vk-main",
+  tag: "vk-app",
   /**
    * Html and css inlined, and it's okay here because this data is required to bootstrap app
    */
-  template: require("./main.html"),
-  style: require("./main.css"),
-  dependencies: [MainMenuElement],
+  template: require("./app.html"),
+  style: require("./app.css"),
+  elements: [MainMenuElement],
 })
-export class MainElement extends HTMLElement implements ComponentInterface {
+export class AppElement extends HTMLElement implements ComponentInterface {
   protected router: Router = new Router();
+
+  protected initialContent: Node;
 
   constructor() {
     super();
