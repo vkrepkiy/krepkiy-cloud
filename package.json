@@ -27,7 +27,9 @@
     "**/*.json"
   ],
   "dependencies": {
+    "@types/animejs": "^3.1.0",
     "@types/jest": "^25.2.1",
-    "@types/node": "^12.12.34"
+    "@types/node": "^12.12.34",
+    "animejs": "^3.2.0"
   }
 }

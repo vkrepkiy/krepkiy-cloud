@@ -18,18 +18,7 @@
   font-weight: normal;
   padding: 0 5px;
   position: relative;
-
-  animation-duration: 1s;
-  animation-name: colorize;
 }
 .loading-title sub {
   color: var(--header-sub-color);
-}
-
-@keyframes colorize {
-  from {
-    color: inherit;
-  }
-  to {
-  }
 }

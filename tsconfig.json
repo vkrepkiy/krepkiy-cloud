@@ -12,6 +12,7 @@
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "incremental": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true
   }
 }
