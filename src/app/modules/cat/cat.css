@@ -1,4 +1,5 @@
 :host {
   white-space: pre;
+  border-bottom: 1px solid var(--text-color);
   /* margin: auto; */
 }
