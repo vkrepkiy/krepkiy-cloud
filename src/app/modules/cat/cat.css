@@ -1,5 +1,8 @@
 :host {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.2rem;
   white-space: pre;
-  border-bottom: 1px solid var(--text-color);
-  /* margin: auto; */
+  overflow: hidden;
+  /* border-bottom: 1px solid var(--text-color); */
 }

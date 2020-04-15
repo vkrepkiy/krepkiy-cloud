@@ -12,12 +12,11 @@ export class HomeElement extends HTMLElement implements ComponentInterface {
   componentConnected() {
     const titleEl = this.shadowRoot!.querySelector("h1");
     const welcomeTextEl = this.shadowRoot!.querySelector(".welcome-text");
-
     const accentColor = getComputedStyle(document.documentElement)
       .getPropertyValue("--color-accent")
       .trim();
 
-    anime.set(this.shadowRoot!.querySelector(".welcome-text"), {
+    anime.set(welcomeTextEl, {
       height: 0,
       scaleY: 0,
       scaleX: 0,

@@ -38,3 +38,9 @@ p {
 ul {
   margin: 0;
 }
+vk-cat {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
