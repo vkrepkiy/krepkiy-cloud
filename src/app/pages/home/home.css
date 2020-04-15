@@ -10,9 +10,16 @@
   color: var(--text-color);
   font-family: var(--font-family);
 }
-.loading-title {
-  display: block;
+.container {
   margin: auto;
+  display: flex;
+  flex-direction: column;
+  max-width: 80vw;
+  min-width: 20rem;
+}
+.loading-title {
+  margin: auto;
+  display: block;
   color: var(--color-accent);
   text-shadow: var(--text-shadow-color) 0px 0px 1px;
   font-weight: normal;
@@ -21,4 +28,11 @@
 }
 .loading-title sub {
   color: var(--header-sub-color);
+}
+p {
+  line-height: 1.6rem;
+  margin: 2rem 0 0;
+}
+ul {
+  margin: 0;
 }

@@ -6,6 +6,7 @@ import { Component, ComponentInterface } from "./modules/core/component";
 import { Router } from "./modules/core/router/router";
 import { routerConfig } from "./routes";
 import MainMenuElement from "./modules/main-menu/main-menu";
+import anime from "animejs";
 
 @Component({
   tag: "vk-app",
@@ -28,7 +29,27 @@ export class AppElement extends HTMLElement implements ComponentInterface {
   }
 
   componentConnected() {
+    this.animateMenu(this.shadowRoot!.querySelector("vk-main-menu"));
+
     // Trigger initial navigation event
     this.router.navigate(location.pathname, "", true);
+  }
+
+  animateMenu(el: Element | null) {
+    if (!el) {
+      return;
+    }
+
+    anime.set(el, {
+      opacity: "0",
+    });
+
+    anime({
+      targets: el,
+      easing: "linear",
+      opacity: "1",
+      duration: 1000,
+      delay: 0,
+    });
   }
 }
