@@ -29,6 +29,9 @@
 .loading-title sub {
   color: var(--header-sub-color);
 }
+.welcome-text {
+  overflow: hidden;
+}
 p {
   line-height: 1.6rem;
   margin: 2rem 0 0;

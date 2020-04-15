@@ -11,10 +11,24 @@ const gridItems = grid[0] * grid[1];
 })
 export class HomeElement extends HTMLElement implements ComponentInterface {
   componentConnected() {
+    const titleEl = this.shadowRoot!.querySelector("h1");
+    const welcomeTextEl = this.shadowRoot!.querySelector(".welcome-text");
+    const welcomeTextOriginHeight = welcomeTextEl!.clientHeight;
     anime({
-      targets: this.shadowRoot!.querySelector("h1"),
+      targets: titleEl,
       translateX: "0vw",
       rotate: "1turn",
+      duration: 1000,
+      delay: 0,
+    });
+
+    anime.set(this.shadowRoot!.querySelector(".welcome-text"), {
+      height: 0,
+    });
+
+    anime({
+      targets: welcomeTextEl,
+      height: welcomeTextOriginHeight,
       duration: 2000,
       delay: 0,
     });
