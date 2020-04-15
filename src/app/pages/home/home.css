@@ -46,3 +46,20 @@ vk-cat {
   left: 0;
   right: 0;
 }
+.contacts {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  padding: 0.8rem 0.5rem;
+}
+.contacts a {
+  flex: 0 0 auto;
+  display: block;
+  padding: 0 0.5rem;
+}
+.contacts a svg {
+  fill: var(--text-color);
+  width: 1.5em;
+  height: 1.5em;
+}

@@ -12,6 +12,8 @@ export class HomeElement extends HTMLElement implements ComponentInterface {
   componentConnected() {
     const titleEl = this.shadowRoot!.querySelector("h1");
     const welcomeTextEl = this.shadowRoot!.querySelector(".welcome-text");
+    const contactsEl = this.shadowRoot!.querySelector(".contacts");
+    const catEl = this.shadowRoot!.querySelector("vk-cat");
     const accentColor = getComputedStyle(document.documentElement)
       .getPropertyValue("--color-accent")
       .trim();
@@ -22,12 +24,24 @@ export class HomeElement extends HTMLElement implements ComponentInterface {
       scaleX: 0,
     });
 
+    anime.set([contactsEl, catEl], {
+      opacity: 0,
+    });
+
+    anime({
+      targets: [contactsEl, catEl],
+      opacity: 1,
+      delay: 100,
+      duration: 2000,
+      easing: "easeOutSine",
+    });
+
     anime
       .timeline()
       .add({
         targets: titleEl,
         color: accentColor,
-        duration: 400,
+        duration: 600,
         delay: 100,
         easing: "easeOutSine",
       })
