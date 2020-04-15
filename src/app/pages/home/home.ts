@@ -1,37 +1,54 @@
 import { Component, ComponentInterface } from "../../modules/core/component";
 import anime from "animejs";
-
-const grid = [50, 50];
-const gridItems = grid[0] * grid[1];
+import { CatElement } from "../../modules/cat/cat";
 
 @Component({
   tag: "vk-home",
   template: require("./home.html"),
   style: require("./home.css"),
+  elements: [CatElement],
 })
 export class HomeElement extends HTMLElement implements ComponentInterface {
   componentConnected() {
     const titleEl = this.shadowRoot!.querySelector("h1");
     const welcomeTextEl = this.shadowRoot!.querySelector(".welcome-text");
-    const welcomeTextOriginHeight = welcomeTextEl!.clientHeight;
-    anime({
-      targets: titleEl,
-      translateX: "0vw",
-      rotate: "1turn",
-      duration: 1000,
-      delay: 0,
-    });
+
+    const accentColor = getComputedStyle(document.documentElement)
+      .getPropertyValue("--color-accent")
+      .trim();
 
     anime.set(this.shadowRoot!.querySelector(".welcome-text"), {
       height: 0,
+      scaleY: 0,
+      scaleX: 0,
     });
 
-    anime({
-      targets: welcomeTextEl,
-      height: welcomeTextOriginHeight,
-      duration: 2000,
-      delay: 0,
-    });
+    anime
+      .timeline()
+      .add({
+        targets: titleEl,
+        color: accentColor,
+        duration: 400,
+        delay: 100,
+        easing: "easeOutSine",
+      })
+      .add({
+        targets: welcomeTextEl,
+        height: "100%",
+        duration: 500,
+        easing: "easeOutQuart",
+      })
+      .add({
+        targets: welcomeTextEl,
+        scaleY: 0.02,
+        scaleX: 1,
+        duration: 400,
+      })
+      .add({
+        targets: welcomeTextEl,
+        scaleY: 1,
+        duration: 600,
+      });
   }
 }
 

@@ -20,7 +20,6 @@
 .loading-title {
   margin: auto;
   display: block;
-  color: var(--color-accent);
   text-shadow: var(--text-shadow-color) 0px 0px 1px;
   font-weight: normal;
   padding: 0 5px;
