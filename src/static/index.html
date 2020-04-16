@@ -25,12 +25,20 @@
         color: var(--text-color, #999);
         font-family: var(--font-family, monospace);
         font-size: var(--font-size, 1.1em);
+        line-height: var(--line-height, 1.6em);
       }
+
+      /* Use default font size for narrow screens */
       @media (max-width: 600px) {
-        html,
-        body,
-        vk-app {
-          font-size: var(--font-size, 1em);
+        :root {
+          --font-size: 1rem;
+        }
+      }
+
+      /* Use default font size for wide screens */
+      @media (min-width: 1200px) {
+        :root {
+          --font-size: 1.2rem;
         }
       }
 

@@ -9,6 +9,7 @@
   background: var(--background-color);
   color: var(--text-color);
   font-family: var(--font-family);
+  line-height: var(--line-height);
 }
 .container {
   margin: auto;
@@ -34,11 +35,10 @@
   overflow: hidden;
 }
 p {
-  line-height: 1.6rem;
-  margin: 2rem 0 0;
+  margin: 1.2rem 0;
 }
 ul {
-  margin: 0;
+  margin: -1rem 0 0;
 }
 vk-cat {
   position: absolute;
