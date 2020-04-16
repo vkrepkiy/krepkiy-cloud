@@ -26,6 +26,14 @@
         font-family: var(--font-family, monospace);
         font-size: var(--font-size, 1.1em);
       }
+      @media (max-width: 600px) {
+        html,
+        body,
+        vk-app {
+          font-size: var(--font-size, 1em);
+        }
+      }
+
       .loading-title {
         display: block;
         margin: auto;

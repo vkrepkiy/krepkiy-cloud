@@ -1,5 +1,5 @@
 :root {
-  --font-size: 1.1em;
+  --font-size: 1.1rem;
   --font-family: monospace;
   --background-color: #212121;
   --link-color: #eee;
@@ -10,4 +10,11 @@
   --color-accent: #e31b6e;
   --color-2: #5c11fa;
   --color-3: #009df0;
+}
+
+/* Use default font size for narrow screens */
+@media (max-width: 600px) {
+  :root {
+    --font-size: 1rem;
+  }
 }
