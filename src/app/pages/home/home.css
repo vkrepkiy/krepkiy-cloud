@@ -63,3 +63,6 @@ vk-cat {
   width: 1.5em;
   height: 1.5em;
 }
+a {
+  color: var(--color-accent);
+}

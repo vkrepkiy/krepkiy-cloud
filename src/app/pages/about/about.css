@@ -1,6 +1,11 @@
 :host {
-  display: flex;
+  display: block;
   position: relative;
+  min-width: 100%;
+  min-height: 100%;
+  padding: 0 1rem;
+}
+vk-tag-cloud {
   width: 100%;
-  height: 100%;
+  height: 40vh;
 }

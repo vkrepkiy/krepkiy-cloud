@@ -21,19 +21,20 @@ const enum AnimationState {
 })
 export class TagCloudElement extends HTMLElement implements ComponentInterface {
   public targetFps = 60;
-  public calculationFps = 0.5;
-  public calculateEachMs = 1000 / this.calculationFps; // should be 500
-  public shouldRenderMs = 1000 / this.targetFps; // should be 100
-  public smoothForMs = this.calculateEachMs - this.shouldRenderMs; // 400?
-  public smoothForSec = Math.round(this.smoothForMs / 10) / 100; // should be 0.4 ??
-  public degreePerSec = 5;
-  public size: number;
-  protected items: [HTMLElement, AnimationConfig][];
+  public calculationFps = 0.25;
+  public degreePerFrame = 5; // TODO: should be per sec to remove dependency from calculationFps
+
+  private calculateEachMs = 1000 / this.calculationFps;
+  private shouldRenderMs = 1000 / this.targetFps;
+  private smoothForMs = this.calculateEachMs - this.shouldRenderMs;
+  private smoothForSec = Math.round(this.smoothForMs / 10) / 100;
+  private size: number;
+  private items: [HTMLElement, AnimationConfig][];
   private lastAnimationFrameTs: number = -1 - this.calculateEachMs;
 
   componentConnected() {
     // Init props
-    this.size = Math.min(this.offsetHeight, this.offsetWidth) - 400;
+    this.size = Math.min(this.offsetHeight, this.offsetWidth);
     // Setup logic
     this.items = this.getItems();
     // Run animation with first-time flag
@@ -52,13 +53,14 @@ export class TagCloudElement extends HTMLElement implements ComponentInterface {
   }
 
   initItem(el: HTMLElement): [HTMLElement, AnimationConfig] {
-    const config: AnimationConfig = this.getRandomConfig();
+    const config: AnimationConfig = this.getRandomConfig(el);
     return [el, config];
   }
 
-  getRandomConfig(): AnimationConfig {
+  getRandomConfig(el: HTMLElement): AnimationConfig {
     // Speed from 0 to 1
     const randomSeed = Math.round(Math.random() * 1000) / 1000;
+    el.style.fontSize = `${Math.max(0.7, randomSeed)}em`;
     return {
       scale: Math.max(0.7, randomSeed * 2),
       speed: Math.max(5, randomSeed * 10),
@@ -68,14 +70,14 @@ export class TagCloudElement extends HTMLElement implements ComponentInterface {
   }
 
   transformEl(el, config: AnimationConfig): void {
-    el.style.transform = `scale(${config.scale}) rotate(${config.rotation}deg) translateX(${config.translateX}px) rotate(-${config.rotation}deg)`;
+    el.style.transform = `rotate(${config.rotation}deg) translateX(${config.translateX}px) rotate(-${config.rotation}deg)`;
   }
 
   /**
    * This method mutates config object, be aware
    */
   updateConfigForNextFrame(config: AnimationConfig): AnimationConfig {
-    config.rotation = config.rotation + this.degreePerSec * config.speed;
+    config.rotation = config.rotation + this.degreePerFrame * config.speed;
     return config;
   }
 
