@@ -20,21 +20,20 @@ const enum AnimationState {
   elements: [],
 })
 export class TagCloudElement extends HTMLElement implements ComponentInterface {
-  public targetFps = 60;
-  public calculationFps = 0.25;
-  public degreePerFrame = 5; // TODO: should be per sec to remove dependency from calculationFps
+  public calculateEachMs = 2000;
+  public rotateDegreePerSecond = 4;
+  public rotateDegreePerFrame =
+    Math.round(
+      (this.rotateDegreePerSecond / (1000 / this.calculateEachMs)) * 10
+    ) / 10;
 
-  private calculateEachMs = 1000 / this.calculationFps;
-  private shouldRenderMs = 1000 / this.targetFps;
-  private smoothForMs = this.calculateEachMs - this.shouldRenderMs;
-  private smoothForSec = Math.round(this.smoothForMs / 10) / 100;
-  private size: number;
+  private containerMinSize: number;
   private items: [HTMLElement, AnimationConfig][];
   private lastAnimationFrameTs: number = -1 - this.calculateEachMs;
 
   componentConnected() {
     // Init props
-    this.size = Math.min(this.offsetHeight, this.offsetWidth);
+    this.containerMinSize = Math.min(this.offsetHeight, this.offsetWidth);
     // Setup logic
     this.items = this.getItems();
     // Run animation with first-time flag
@@ -58,14 +57,18 @@ export class TagCloudElement extends HTMLElement implements ComponentInterface {
   }
 
   getRandomConfig(el: HTMLElement): AnimationConfig {
-    // Speed from 0 to 1
     const randomSeed = Math.round(Math.random() * 1000) / 1000;
-    el.style.fontSize = `${Math.max(0.7, randomSeed)}em`;
+    el.style.fontSize = `${Math.max(0.5, randomSeed * 1.4)}em`;
     return {
-      scale: Math.max(0.7, randomSeed * 2),
+      scale: Math.max(0.7, randomSeed * 5),
       speed: Math.max(5, randomSeed * 10),
       rotation: Math.floor(Math.random() * 360),
-      translateX: Math.max(100, Math.round(randomSeed * this.size)),
+      translateX: Math.round(
+        Math.max(
+          this.containerMinSize / 5,
+          Math.round(randomSeed * (this.containerMinSize / 2))
+        )
+      ),
     };
   }
 
@@ -77,7 +80,8 @@ export class TagCloudElement extends HTMLElement implements ComponentInterface {
    * This method mutates config object, be aware
    */
   updateConfigForNextFrame(config: AnimationConfig): AnimationConfig {
-    config.rotation = config.rotation + this.degreePerFrame * config.speed;
+    config.rotation =
+      config.rotation + this.rotateDegreePerFrame * config.speed;
     return config;
   }
 
@@ -92,7 +96,7 @@ export class TagCloudElement extends HTMLElement implements ComponentInterface {
 
   // CSS transition is great for smoothing rare js calculations
   setTransition(el: HTMLElement): void {
-    el.style.transition = `all linear ${this.smoothForSec}s`;
+    el.style.transition = `all linear ${this.calculateEachMs / 1000}s`;
   }
 
   /**
@@ -101,7 +105,7 @@ export class TagCloudElement extends HTMLElement implements ComponentInterface {
    * after applying transition property
    */
   requestAnimationFrame = (time: number, state?: AnimationState): void => {
-    // Make shure first animation frame will be rendered on time
+    // Make sure first animation frame will be rendered on time
     if (state === AnimationState.initial) {
       this.runAnimationUpdate();
       requestAnimationFrame((time) =>
@@ -111,7 +115,10 @@ export class TagCloudElement extends HTMLElement implements ComponentInterface {
     } else if (state === AnimationState.second) {
       this.runAnimationUpdate(true);
       this.lastAnimationFrameTs = time;
-    } else if (time - this.lastAnimationFrameTs > this.calculateEachMs) {
+    } else if (
+      time - this.lastAnimationFrameTs > this.calculateEachMs &&
+      document.visibilityState !== "hidden"
+    ) {
       this.runAnimationUpdate();
       this.lastAnimationFrameTs = time;
     }

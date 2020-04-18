@@ -1,2 +1,15 @@
-<h1>A few words about me</h1>
-<vk-tag-cloud></vk-tag-cloud>
+<h1>Experiments</h1>
+<h2>
+  JS + CSS animation
+</h2>
+<p>
+  Disclaimer: DOM should never be used to visualize huge amount of objects,
+  especially animated ones!
+</p>
+<p>
+  Flying tags. CSS have no random() function (though SASS has static random
+  generator), so we need to update CSS values in JS code. The main concept is
+  "calculate less, render more" without quality issues. The solution is great
+  for displaying small amount of animated objects on slow clients.
+</p>
+<vk-tag-cloud width="100vw" height="100rem"></vk-tag-cloud>
