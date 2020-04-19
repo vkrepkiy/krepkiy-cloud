@@ -1,12 +1,13 @@
 import { Component, ComponentInterface } from "../../modules/core/component";
 import anime from "animejs";
 import { CatElement } from "../../modules/cat/cat";
+import TagCloudElement from "../../modules/skill-whirl/skill-whirl";
 
 @Component({
   tag: "vk-home",
   template: require("./home.html"),
   style: require("./home.css"),
-  elements: [CatElement],
+  elements: [CatElement, TagCloudElement],
 })
 export class HomeElement extends HTMLElement implements ComponentInterface {
   componentConnected() {

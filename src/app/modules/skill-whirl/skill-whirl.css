@@ -1,0 +1,48 @@
+:host {
+  display: flex;
+  position: relative;
+}
+.title {
+  font-weight: normal;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  text-align: center;
+  transform: translateX(-50%) translateY(-50%);
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+  margin: 0;
+}
+.container {
+  position: relative;
+  margin: auto;
+  width: 0;
+  height: 0;
+  overflow: visible;
+}
+.item {
+  position: absolute;
+  white-space: nowrap;
+  opacity: 0;
+  z-index: 10;
+}
+.itemLink {
+  position: relative;
+  color: var(--text-color);
+  text-decoration: none;
+  display: block;
+  transform: translateX(-50%) translateY(-50%);
+  padding: 0.2em;
+}
+.container:hover > .item {
+  animation-play-state: paused !important;
+}
+.item:hover {
+  z-index: 20;
+}
+.itemLink:hover {
+  cursor: pointer;
+  color: var(--color-accent);
+  background: black;
+  font-size: 1.5em;
+}

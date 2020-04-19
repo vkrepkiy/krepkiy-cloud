@@ -4,10 +4,37 @@
   min-width: 100%;
   min-height: 100%;
 }
-:host > * {
-  margin-left: 1rem;
-  margin-right: 1rem;
+vk-skill-whirl {
+  height: 100vmin;
+  max-height: 40rem;
+  background: #2c3d50;
+  padding-bottom: 1rem;
 }
-vk-tag-cloud {
-  height: 40rem;
+a {
+  color: var(--color-accent);
+}
+h1 {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  white-space: nowrap;
+  text-align: center;
+  font-weight: normal;
+  text-transform: uppercase;
+}
+p {
+  margin: 1rem 1rem;
+}
+h1:after,
+h1:before {
+  content: "";
+  flex: 1 1 auto;
+  display: inline-block;
+  background: var(--text-color);
+}
+h1:after {
+  margin-left: 1rem;
+}
+h1:before {
+  margin-right: 1rem;
 }

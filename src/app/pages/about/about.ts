@@ -1,5 +1,5 @@
 import { Component, ComponentInterface } from "../../modules/core/component";
-import TagCloudElement from "../../modules/tag-cloud/tag-cloud";
+import TagCloudElement from "../../modules/skill-whirl/skill-whirl";
 
 @Component({
   tag: "vk-about",
