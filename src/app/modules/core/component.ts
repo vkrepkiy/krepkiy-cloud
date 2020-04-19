@@ -23,7 +23,7 @@ export interface ComponentInterface extends HTMLElement {
   /**
    * Called when component is disconnected
    */
-  componentDisonnected?();
+  componentDisconnected?();
   /**
    * Called when component is adopted by Element
    */
@@ -92,8 +92,6 @@ function getDecoratedClass(
         this.componentBeforeConnected();
       }
 
-      this.innerHTML = "";
-
       this.attachShadow({ mode: "open" }).appendChild(ClassComponent.template);
 
       this.shadowRoot!.addEventListener("click", (e: MouseEvent) => {
@@ -106,8 +104,8 @@ function getDecoratedClass(
     }
 
     disconnectedCallback() {
-      if (this.componentDisonnected) {
-        this.componentDisonnected();
+      if (this.componentDisconnected) {
+        this.componentDisconnected();
       }
     }
 
