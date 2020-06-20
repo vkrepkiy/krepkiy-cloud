@@ -1,0 +1,11 @@
+version: "3"
+services:
+  web:
+    image: nginx:alpine
+    volumes:
+      - "./build/app:/usr/share/nginx/html"
+      - "./nginx/sites-enabled:/etx/nginx/sites-enabled"
+      - "./nginx/sites-enabled:/etx/nginx/sites-available"
+    ports:
+      - "0.0.0.0:80:80"
+    restart: always
