@@ -6,20 +6,20 @@
   "scripts": {
     "prebuild": "rm -rf build/app && mkdir -p build/app",
     "predev": "rm -rf build/app && mkdir -p build/app",
-    "dev": "webpack-dev-server --host 0.0.0.0",
-    "build": "webpack -p"
+    "dev": "webpack-dev-server --host 0.0.0.0 --mode=development",
+    "build": "webpack --mode=production"
   },
   "author": "Valentin Krepkiy <valkrepkiy@gmail.com> (http://krepkiy.cloud/)",
   "license": "ISC",
   "devDependencies": {
-    "copy-webpack-plugin": "^5.1.1",
-    "jest": "^25.3.0",
-    "ts-jest": "^25.3.1",
-    "ts-loader": "^6.2.2",
-    "typescript": "^3.8.3",
-    "webpack": "^5.0.0-beta.14",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "copy-webpack-plugin": "^11.0.0",
+    "jest": "^29.4.3",
+    "ts-jest": "^29.0.5",
+    "ts-loader": "^9.4.2",
+    "typescript": "^4.9.5",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
   },
   "sideEffects": [
     "**/*.css",
@@ -27,9 +27,9 @@
     "**/*.json"
   ],
   "dependencies": {
-    "@types/animejs": "^3.1.0",
-    "@types/jest": "^25.2.1",
-    "@types/node": "^12.12.34",
-    "animejs": "^3.2.0"
+    "@types/animejs": "^3.1.7",
+    "@types/jest": "^29.4.0",
+    "@types/node": "^18.14.2",
+    "animejs": "^3.2.1"
   }
 }

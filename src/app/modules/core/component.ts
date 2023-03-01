@@ -50,11 +50,12 @@ function register(
 ): ComponentConstructor {
   let DecoratedComponent: ComponentConstructor;
 
-  if (!customElements.get(options.tag)) {
+  const el = customElements.get(options.tag);
+  if (!el) {
     DecoratedComponent = getDecoratedClass(Class, options);
     customElements.define(options.tag, DecoratedComponent);
   } else {
-    DecoratedComponent = customElements.get(options.tag);
+    DecoratedComponent = el as ComponentConstructor;
   }
 
   return DecoratedComponent;
@@ -130,11 +131,12 @@ export function Component(options: ComponentOptions) {
   return function <T extends CustomElementConstructor>(Class: T): T {
     let Element: CustomElementConstructor;
 
-    if (!customElements.get(options.tag)) {
+    const el = customElements.get(options.tag);
+    if (!el) {
       Element = getDecoratedClass(Class, options);
       register(Element, options);
     } else {
-      Element = customElements.get(options.tag);
+      Element = el;
     }
 
     return Element as T;

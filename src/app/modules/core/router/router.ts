@@ -32,12 +32,12 @@ export class Router extends Singleton {
   }
 
   public static removeHashOrQuery(url: string): string {
-    const queryorHashStart = url
+    const queryOrHashStart = url
       .split("")
       .findIndex((i) => i === "?" || i === "#");
 
-    if (queryorHashStart > -1) {
-      url = url.slice(0, queryorHashStart);
+    if (queryOrHashStart > -1) {
+      url = url.slice(0, queryOrHashStart);
     }
 
     return url;

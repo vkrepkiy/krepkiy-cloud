@@ -18,20 +18,17 @@ module.exports = {
     filename: "[name].bundle.js",
     path: fromRoot(outDir),
   },
-  experiments: {
-    asset: true,
-  },
   devtool: "source-map",
   devServer: {
     historyApiFallback: {
       index: "index.html",
     },
     compress: true,
-    contentBase: fromRoot(outDir),
-    writeToDisk: true,
   },
   plugins: [
-    new CopyPlugin([{ from: fromRoot("src/static"), to: fromRoot(outDir) }]),
+    new CopyPlugin({
+      patterns: [{ from: fromRoot("src/static"), to: fromRoot(outDir) }],
+    }),
   ],
   module: {
     rules: [
@@ -57,10 +54,6 @@ module.exports = {
         use: [
           {
             loader: "ts-loader",
-            options: {
-              transpileOnly: true,
-              experimentalWatchApi: true,
-            },
           },
         ],
       },
